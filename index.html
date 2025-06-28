@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Website ALQUIZ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #74ebd5, #acb6e5);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    #container {
+      background: #ffffff;
+      padding: 30px 25px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+    }
+    h1 {
+      font-size: 32px;
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      color: transparent;
+      -webkit-background-clip: text;
+    }
+    select, input, button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 2px solid #ddd;
+    }
+    button {
+      background-color: #0072ff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    button:hover {
+      background-color: #005ecc;
+    }
+    #score, #highScore {
+      font-size: 18px;
+      margin-top: 10px;
+      color: #333;
+    }
+    #question {
+      font-size: 18px;
+      margin: 20px 0;
+    }
+    #result {
+      font-size: 16px;
+      margin-top: 15px;
+      min-height: 24px;
+      color: #222;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h1>Website ALQUIZ 🎉</h1>
+    <label for="category">Pilih Kategori:</label>
+    <select id="category" onchange="newQuestion()">
+      <option value="lucu">Lucu</option>
+      <option value="logika">Logika</option>
+      <option value="islami">Islami</option>
+    </select>
+    <p id="score">Skor: <span id="scoreVal">0</span></p>
+    <p id="highScore">Skor Tertinggi: <span id="highScoreVal">0</span></p>
+    <p id="question">Loading pertanyaan...</p>
+    <input type="text" id="answerInput" placeholder="Jawaban kamu di sini..."/>
+    <button onclick="checkAnswer()">✅ Cek Jawaban</button>
+    <button onclick="newQuestion()">🔄 Pertanyaan Baru</button>
+    <p id="result"></p>
+  </div>
+  <script>
+    const questions = {
+      lucu: [
+        { question: "Kenapa ayam menyeberang jalan?", answer: "Karena mau nyebrang" },
+        { question: "Kenapa komputer suka hang?", answer: "Karena dia dingin" },
+        { question: "Kenapa gajah nggak main laptop?", answer: "Karena nggak muat di meja" }
+      ],
+      logika: [
+        { question: "Kalau 1+1=2, lalu 2+2=?", answer: "4" },
+        { question: "Benda apa yang makin penuh makin ringan?", answer: "Balon" }
+      ],
+      islami: [
+        { question: "Siapa nabi terakhir?", answer: "Muhammad" },
+        { question: "Berapa jumlah rukun Islam?", answer: "5" }
+      ]
+    };
+    let current = {};
+    let score = 0;
+    let highScore = localStorage.getItem("alquiz_highscore") || 0;
+    let answered = false;
+    document.getElementById("highScoreVal").innerText = highScore;
+    function getSelectedCategory() {
+      return document.getElementById("category").value;
+    }
+    function newQuestion() {
+      const category = getSelectedCategory();
+      const set = questions[category];
+      current = set[Math.floor(Math.random() * set.length)];
+      answered = false;
+      document.getElementById("question").innerText = current.question;
+      document.getElementById("result").innerText = "";
+      document.getElementById("answerInput").value = "";
+    }
+    function updateScore() {
+      score++;
+      document.getElementById("scoreVal").innerText = score;
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem("alquiz_highscore", highScore);
+        document.getElementById("highScoreVal").innerText = highScore;
+      }
+    }
+    function checkAnswer() {
+      if (answered) return;
+      const userAnswer = document.getElementById("answerInput").value.trim().toLowerCase();
+      const correct = current.answer.toLowerCase();
+      if (userAnswer === correct) {
+        document.getElementById("result").innerText = "✅ Benar! Kamu hebat!";
+        updateScore();
+      } else {
+        document.getElementById("result").innerText = `❌ Salah. Jawaban benar: "${current.answer}"`;
+      }
+      answered = true;
+    }
+    window.onload = newQuestion;
+  </script>
+</body>
+</html>
