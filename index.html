@@ -107,7 +107,7 @@ button{
   filter:brightness(1.2);
 }
 
-/* FLOAT TEXT */
+/* FLOATING TEXT */
 .neon{
   position:absolute;
   color:red;
@@ -141,9 +141,9 @@ button{
 <div id="loginScreen">
   <h2>LOGIN 4RKN HOST</h2>
   <p>Follow IG <a href="https://instagram.com/4rknnnajaa" target="_blank">@4rknnnajaa</a><br>DM: "bang mau bikin akun"</p>
-  <input id="user" placeholder="Username">
-  <input id="pass" type="password" placeholder="Password">
-  <button onclick="login()">LOGIN</button>
+  <input id="inputUser" placeholder="Username">
+  <input id="inputPass" type="password" placeholder="Password">
+  <button id="btnLogin">LOGIN</button>
   <p id="msg" style="color:red;"></p>
 </div>
 
@@ -151,7 +151,7 @@ button{
 <div id="mainSite">
   <div class="title">4RKN HOST</div>
   <div id="guide">Klik START SYSTEM</div>
-  <button onclick="startHack()">START SYSTEM</button>
+  <button id="btnStart">START SYSTEM</button>
 
   <div class="terminal" id="terminal"></div>
 
@@ -173,19 +173,27 @@ button{
 <audio id="scare" src="https://www.myinstants.com/media/sounds/scream.mp3"></audio>
 
 <script>
-// LOGIN
+// LOGIN SYSTEM
 const USER="ARKAN GANTENG";
 const PASSWORDS=["ARKAN GANTENG","FOLLOW4RKN"];
 
-function login(){
-  if(user.value.trim()===USER && PASSWORDS.includes(pass.value.toUpperCase())){
+const inputUser=document.getElementById("inputUser");
+const inputPass=document.getElementById("inputPass");
+const msg=document.getElementById("msg");
+const loginScreen=document.getElementById("loginScreen");
+const mainSite=document.getElementById("mainSite");
+
+document.getElementById("btnLogin").addEventListener("click", ()=>{
+  const u=inputUser.value.trim();
+  const p=inputPass.value.trim();
+  if(u===USER && PASSWORDS.includes(p.toUpperCase())){
     loginScreen.style.display="none";
     mainSite.style.display="block";
-    bg.play();
+    document.getElementById("bg").play();
   }else{
     msg.innerText="Salah! Follow & DM IG dulu!";
   }
-}
+});
 
 // TERMINAL DATA
 const data=[
@@ -199,9 +207,17 @@ const data=[
 ];
 
 let i=0;
+const terminal=document.getElementById("terminal");
+const guide=document.getElementById("guide");
+const jumpscareDiv=document.getElementById("jumpscare");
+const gallery=document.getElementById("gallery");
+
+document.getElementById("btnStart").addEventListener("click", startHack);
 
 function startHack(){
   guide.innerText="Memulai sistem...";
+  i=0;
+  terminal.innerHTML="";
   let interval=setInterval(()=>{
     if(i<data.length){
       terminal.innerHTML+=data[i]+"<br>";
@@ -215,22 +231,20 @@ function startHack(){
   },800);
 }
 
-// RESULT
+// SHOW JUMPSCARE + GALLERY
 function showResult(){
   setTimeout(()=>{
     jumpscareDiv.style.opacity=1;
-    scare.play();
+    document.getElementById("scare").play();
   },1000);
 
   setTimeout(()=>{
     jumpscareDiv.style.opacity=0;
-    document.getElementById("gallery").style.display="block";
+    gallery.style.display="block";
   },3000);
 }
 
-const jumpscareDiv=document.getElementById("jumpscare");
-
-// FLOAT TEXT
+// FLOATING TEXT
 const quotes=["aku lelah...","sendiri...","gelap...","semua hilang..."];
 setInterval(()=>{
   let q=document.createElement("div");
